@@ -183,7 +183,7 @@ class TRTInference(object):
         # And return results
         return detection_out, keepCount_out
 
-    def infer_batch(self, image_paths):
+    def infer_batch(self, image_paths, inf_time):
         """Infers model on batch of same sized images resized to fit the model.
 
         Args:
@@ -204,7 +204,7 @@ class TRTInference(object):
         # (self.inputs was returned earlier by allocate_buffers())
         np.copyto(self.inputs[0].host, imgs.ravel())
         
-        # inference_start_time = time.time()
+        inf_start_time = time.time()
 
         # ...fetch model outputs...
         [detection_out, keep_count_out] = common.do_inference(
@@ -212,6 +212,8 @@ class TRTInference(object):
             outputs=self.outputs, stream=self.stream,
             batch_size=max_batch_size)
         
+        inf_time = inf_time + (time.time() - inf_start_time)
+
         '''
         # Output inference time
         print("TensorRT inference time: {} ms".format(

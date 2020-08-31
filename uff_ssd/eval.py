@@ -216,12 +216,12 @@ def produce_tensorrt_detections(detection_files, trt_inference_wrapper, max_batc
     start_time = time.time()
     inf_time = 0
     for idx in range(0, len(image_numbers), max_batch_size):
-        inf_start_time = time.time()
         imgs = image_numbers[idx:idx+max_batch_size]
         batch_size = len(imgs)
         print("Infering image {}/{}".format(idx+1, total_imgs))
         image_paths = [image_path.format(img) for img in imgs]
-        detections, keep_count = trt_inference_wrapper.infer_batch(image_paths)
+        inf_start_time = time.time()
+        detections, keep_count = trt_inference_wrapper.infer_batch(image_paths, inf_time)
         inf_time = inf_time + (time.time() - inf_start_time)
         prediction_fields = len(TRT_PREDICTION_LAYOUT)
         for img_idx, img_number in enumerate(imgs):
@@ -245,6 +245,7 @@ def produce_tensorrt_detections(detection_files, trt_inference_wrapper, max_batc
     end_time = time.time()
     
     print("Inference time : {:.2f}".format(inf_time))
+    print("Image / Inf time : {:.2f}".format(total_imgs/(inf_time)))
     print("Total evaluation time : {:.2f}".format(end_time - start_time))
     print("TensorRT SSD Img/sec: {:.2f}".format(total_imgs/(end_time - start_time))) 
 
