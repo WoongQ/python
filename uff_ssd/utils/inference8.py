@@ -214,14 +214,15 @@ class TRTInference(object):
         
         inf_time = inf_time + (time.time() - inf_start_time)
 
+        
         '''
         # Output inference time
         print("TensorRT inference time: {} ms".format(
-            int(round((time.time() - inference_start_time) * 1000))))
+            int(round((time.time() - inf_start_time) * 1000))))
         '''
 
         # ...and return results.
-        return detection_out, keep_count_out
+        return detection_out, keep_count_out, inf_time
 
     def _load_image_into_numpy_array(self, image):
         (im_width, im_height) = image.size

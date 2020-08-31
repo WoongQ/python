@@ -220,9 +220,9 @@ def produce_tensorrt_detections(detection_files, trt_inference_wrapper, max_batc
         batch_size = len(imgs)
         print("Infering image {}/{}".format(idx+1, total_imgs))
         image_paths = [image_path.format(img) for img in imgs]
-        inf_start_time = time.time()
-        detections, keep_count = trt_inference_wrapper.infer_batch(image_paths, inf_time)
-        inf_time = inf_time + (time.time() - inf_start_time)
+        # inf_start_time = time.time()
+        detections, keep_count, inf_time = trt_inference_wrapper.infer_batch(image_paths, inf_time)
+        # inf_time = inf_time + (time.time() - inf_start_time)
         prediction_fields = len(TRT_PREDICTION_LAYOUT)
         for img_idx, img_number in enumerate(imgs):
             img_predictions_start_idx = prediction_fields * keep_count[img_idx] * img_idx
